@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# This script takes the same parameters as the ./server program, 
+# as well as a fileset parameter that is passed to the client program.
+# 
+# This script runs the server program, and then it runs the client program
+# several times.
+#
+# It produces the average run time across the different client runs.
+# The client run times are also stored in the file called run.out
+#
+
+if [ $# -ne 5 ]; then
+   echo "Usage: ./run-one-experiment port nr_threads max_requests max_cache_size fileset_dir.idx" 1>&2
+   exit 1
+fi
+
+./server $1 $2 $3 $4 > /dev/null &
+SERVER_PID=$!
+trap 'kill -9 $SERVER_PID 2> /dev/null; sleep 5; exit 1' 1 2 3 9 15
+
+SUM=0
+i=1
+n=10
+
+# give some time for the server to start up
+sleep 1
+FILESET=$5
+
+rm -f run.out
+while [ $i -le $n ]; do
+    ./client -t localhost $1 100 10 $FILESET >> run.out;
+    if [ $? -ne 0 ]; then
+	echo "error: client nr $i failed" 1>&2
+	kill -9 $SERVER_PID 2> /dev/null;
+	sleep 5;
+	exit 1;
+    fi
+    i=$[$i+1];
+done
+
+awk '{sum = sum + $4} END {print sum/NR}' run.out
+# we add a sleep or else we may occasionally get bind() errors
+kill -9 $SERVER_PID 2> /dev/null;
+sleep 5;
+exit 0

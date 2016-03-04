@@ -1,0 +1,11 @@
+set terminal pdf enhanced
+set output "plot-threads.pdf"
+
+set title "Run Time vs Nr. of Threads"
+set logscale x 2
+set yrange [0:]
+set xtics ('0' 0.5, 1, 2, 4, 8, 16, 32, 64, 128)
+set xlabel "Nr. of Threads"
+set ylabel "Time (seconds)"
+
+plot "plot-threads.out" using ($1 >= 1 ? $1 : 0.5):2 title "Run Time" with linespoints

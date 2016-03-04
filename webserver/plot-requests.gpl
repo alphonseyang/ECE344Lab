@@ -1,0 +1,11 @@
+set terminal pdf enhanced
+set output "plot-requests.pdf"
+
+set title "Run Time vs Max Requests"
+set logscale x 2
+set yrange [0:]
+set xtics (1, 2, 4, 8, 16, 32)
+set xlabel "Max Requests"
+set ylabel "Time (seconds)"
+
+plot "plot-requests.out" title "Run Time" with linespoints

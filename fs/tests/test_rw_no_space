@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# this test script is assumed to be executed in the parent folder
+#
+
+FOLDER=tests
+MKTESTFS=./mktestfs
+TESTFS=./testfs
+
+# maximum file system size is 1MB
+$MKTESTFS -s 1 device > /dev/null
+
+# DATA has 63 bytes
+# create DATA with 63 * 2^9 = 63 * 512 = 32256 bytes
+DATA=abcdefghijklmnopqrstuvwxyz012345ABCDEFGHIJKLMNOPQRSTUVWXYZ67890
+i=0;
+while [ $i -lt 9 ]; do
+    DATA=$DATA$DATA
+    i=$(($i+1))
+done
+
+FILE=test_rw_no_space
+# save stdout and stderr to file descriptors 3 and 4
+# send output of this script to a file
+exec < /dev/null 3>&1 4>&2 >$FILE.out 2>&1
+
+cat <<EOF | $TESTFS -n device
+create file1
+EOF
+
+# with 1MB, we have 128 blocks of size 8192
+# the writes below happen via the double indirect block
+# the first write allocates a double indirect block
+# all writes allocates one indirect block and 4 direct blocks
+# after 25 such writes, we should have 126 blocks allocated to the file
+# after that writes should fail with no space available
+# the file size should not increase because no partial writes are possible
+i=0;
+off=$((2058*8192))
+while [ $i -lt 26 ]; do
+    echo "write file1 $off $DATA"
+    echo "stat file1"
+    i=$(($i+1))
+    off=$(($off+8192*2048))
+done | $TESTFS -n device
+
+cat <<EOF | $TESTFS -n device
+rm file1
+fsstat
+EOF
+
+# check for any errors in the file system
+/cad2/ece344f/tester/bin/cktestfs device
+
+# restore stdout and stderr
+exec 1>&3 2>&4
+
+# compare outputs
+cmp $FILE.out $FOLDER/$FILE.txt > /dev/null
+if [ $? -eq 0 ]; then
+    echo PASS;
+else
+    echo FAIL;
+    echo "The output of this script is stored in $FILE.out"
+    echo "The output of this script should be $FOLDER/$FILE.txt"
+fi

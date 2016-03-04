@@ -1,0 +1,9 @@
+*.o
+.depend
+fact
+hello
+hi
+test_point
+test_sorted_points
+words
+test_wc

@@ -1,0 +1,30 @@
+file1: i_nr = 1, i_type = 1, i_size = 16891392, block_count = 6
+file1: i_nr = 1, i_type = 1, i_size = 33668608, block_count = 11
+file1: i_nr = 1, i_type = 1, i_size = 50445824, block_count = 16
+file1: i_nr = 1, i_type = 1, i_size = 67223040, block_count = 21
+file1: i_nr = 1, i_type = 1, i_size = 84000256, block_count = 26
+file1: i_nr = 1, i_type = 1, i_size = 100777472, block_count = 31
+file1: i_nr = 1, i_type = 1, i_size = 117554688, block_count = 36
+file1: i_nr = 1, i_type = 1, i_size = 134331904, block_count = 41
+file1: i_nr = 1, i_type = 1, i_size = 151109120, block_count = 46
+file1: i_nr = 1, i_type = 1, i_size = 167886336, block_count = 51
+file1: i_nr = 1, i_type = 1, i_size = 184663552, block_count = 56
+file1: i_nr = 1, i_type = 1, i_size = 201440768, block_count = 61
+file1: i_nr = 1, i_type = 1, i_size = 218217984, block_count = 66
+file1: i_nr = 1, i_type = 1, i_size = 234995200, block_count = 71
+file1: i_nr = 1, i_type = 1, i_size = 251772416, block_count = 76
+file1: i_nr = 1, i_type = 1, i_size = 268549632, block_count = 81
+file1: i_nr = 1, i_type = 1, i_size = 285326848, block_count = 86
+file1: i_nr = 1, i_type = 1, i_size = 302104064, block_count = 91
+file1: i_nr = 1, i_type = 1, i_size = 318881280, block_count = 96
+file1: i_nr = 1, i_type = 1, i_size = 335658496, block_count = 101
+file1: i_nr = 1, i_type = 1, i_size = 352435712, block_count = 106
+file1: i_nr = 1, i_type = 1, i_size = 369212928, block_count = 111
+file1: i_nr = 1, i_type = 1, i_size = 385990144, block_count = 116
+file1: i_nr = 1, i_type = 1, i_size = 402767360, block_count = 121
+file1: i_nr = 1, i_type = 1, i_size = 419544576, block_count = 126
+write: No space left on device
+usage: write FILE OFFSET DATA
+file1: i_nr = 1, i_type = 1, i_size = 419544576, block_count = 126
+nr of allocated inodes = 1
+nr of allocated blocks = 1

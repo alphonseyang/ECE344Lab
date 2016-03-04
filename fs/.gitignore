@@ -1,0 +1,7 @@
+device
+depend.mk
+mktestfs
+testfs
+cktestfs
+*.o
+*.out

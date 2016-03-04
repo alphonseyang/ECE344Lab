@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# this test script is assumed to be executed in the parent folder
+#
+
+FOLDER=tests
+MKTESTFS=./mktestfs
+TESTFS=./testfs
+
+$MKTESTFS device > /dev/null
+
+# DATA has 63 bytes
+# create DATA with 63 * 2^9 = 63 * 512 = 32256 bytes
+DATA=abcdefghijklmnopqrstuvwxyz012345ABCDEFGHIJKLMNOPQRSTUVWXYZ67890
+i=0;
+while [ $i -lt 9 ]; do
+    DATA=$DATA$DATA
+    i=$(($i+1))
+done
+
+FILE=test_rw_too_big
+# save stdout and stderr to file descriptors 3 and 4
+# send output of this script to a file
+exec < /dev/null 3>&1 4>&2 >$FILE.out 2>&1
+
+cat <<EOF | $TESTFS -n device
+create file1
+# write 5 data blocks via the double indirect block
+write file1 34376532992 $DATA
+stat file1
+# write 4 data blocks via the indirect block
+write file1 16826880 $DATA
+stat file1
+# write 3 new data blocks, which will increase the file size
+# this write will write beyond the maximum file size
+write file1 34376565250 $DATA
+stat file1
+fsstat
+EOF
+
+cat <<EOF | $TESTFS -n device
+stat file1
+rm file1
+fsstat
+EOF
+
+# check for any errors in the file system
+/cad2/ece344f/tester/bin/cktestfs device
+
+# restore stdout and stderr
+exec 1>&3 2>&4
+
+# compare outputs
+cmp $FILE.out $FOLDER/$FILE.txt > /dev/null
+if [ $? -eq 0 ]; then
+    echo PASS;
+else
+    echo FAIL;
+    echo "The output of this script is stored in $FILE.out"
+    echo "The output of this script should be $FOLDER/$FILE.txt"
+fi

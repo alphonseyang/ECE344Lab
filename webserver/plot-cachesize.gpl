@@ -1,0 +1,11 @@
+set terminal pdf enhanced
+set output "plot-cachesize.pdf"
+
+set title "Run Time vs Cache Size"
+set logscale x 2
+set yrange [0:]
+set xtics ("16KB" 16384, "64KB" 65536, "256KB" 262144, "1MB" 1048576, "4MB" 4194304, "16MB" 16777216)
+set xlabel "Cache Size"
+set ylabel "Time (seconds)"
+
+plot "plot-cachesize.out" title "Run Time" with linespoints

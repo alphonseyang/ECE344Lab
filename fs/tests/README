@@ -1,0 +1,26 @@
+This directory currently provides four tests.
+
+All tests send their output to a file. They print a PASS when this output file
+matches the expected output file, or else they print FAIL.
+
+For example, the test_rw test describe below sends it output to the test_rw.out
+file and its expected output is in the test_rw.txt file.
+
+1. test_rw
+
+This reads and writes to direct and indirect blocks but at multi-block
+granularity. It will pass once multi-block read/write is implemented.
+
+2. test_rw_large
+
+This tests reads and writes via the double indirect block.
+
+3. test_rw_too_big
+
+This tests writes beyond the maximum file size. Note that the way the test is
+setup, the file size will increase because a partial write occurs (but the file
+size should not become larger than the maximum file size).
+
+4. test_rw_no_space
+
+This tests for writes when the file system is full.

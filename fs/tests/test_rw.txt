@@ -1,0 +1,13 @@
+ab
+abc
+defgh
+file1: i_nr = 1, i_type = 1, i_size = 81924, block_count = 5
+nr of allocated inodes = 1
+nr of allocated blocks = 1
+abcdefghijklmnopqrstuvwxyz012345
+ABCDEFGHIJKLMNOPQRSTUVWXYZ67890
+read: Invalid argument
+usage: read FILE OFFSET SIZE
+file2: i_nr = 1, i_type = 1, i_size = 16498176, block_count = 5
+nr of allocated inodes = 1
+nr of allocated blocks = 1

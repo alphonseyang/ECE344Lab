@@ -1,0 +1,18 @@
+ab
+file1: i_nr = 1, i_type = 1, i_size = 16859138, block_count = 3
+cdef
+file1: i_nr = 1, i_type = 1, i_size = 33636356, block_count = 6
+nr of allocated inodes = 1
+nr of allocated blocks = 1
+abcdefghijklmnopqrstuvwxyz012345
+XYZ67890
+read: Invalid argument
+usage: read FILE OFFSET SIZE
+file2: i_nr = 1, i_type = 1, i_size = 34359852456, block_count = 8
+nr of allocated inodes = 2
+nr of allocated blocks = 9
+stat: No such file or directory
+usage: stat NAME
+file2: i_nr = 1, i_type = 1, i_size = 34359852456, block_count = 8
+nr of allocated inodes = 1
+nr of allocated blocks = 1

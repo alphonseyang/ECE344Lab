@@ -1,0 +1,24 @@
+cc -MM *.c > .depend
+cc -g -Wall -Werror -D_GNU_SOURCE   -c -o test_thread.o test_thread.c
+cc -g -Wall -Werror -D_GNU_SOURCE   -c -o thread.o thread.c
+cc -g -Wall -Werror -D_GNU_SOURCE   -c -o interrupt.o interrupt.c
+cc -g -Wall -Werror -D_GNU_SOURCE    show_ucontext.c test_thread.o thread.o interrupt.o   -o show_ucontext
+cc -g -Wall -Werror -D_GNU_SOURCE    show_handler.c test_thread.o thread.o interrupt.o   -o show_handler
+cc -g -Wall -Werror -D_GNU_SOURCE    test_basic.c test_thread.o thread.o interrupt.o   -o test_basic
+cc -g -Wall -Werror -D_GNU_SOURCE    test_preemptive.c test_thread.o thread.o interrupt.o   -o test_preemptive
+cc -g -Wall -Werror -D_GNU_SOURCE    test_wakeup.c test_thread.o thread.o interrupt.o   -o test_wakeup
+cc -g -Wall -Werror -D_GNU_SOURCE    test_wakeup_all.c test_thread.o thread.o interrupt.o   -o test_wakeup_all
+cc -g -Wall -Werror -D_GNU_SOURCE    test_lock.c test_thread.o thread.o interrupt.o   -o test_lock
+cc -g -Wall -Werror -D_GNU_SOURCE    test_cv_signal.c test_thread.o thread.o interrupt.o   -o test_cv_signal
+cc -g -Wall -Werror -D_GNU_SOURCE    test_cv_broadcast.c test_thread.o thread.o interrupt.o   -o test_cv_broadcast
+Running: /cad2/ece344f/tester/scripts/lab2-01-ucontext.py 
+ucontext test
+Mark for ucontext test is 10 out of 10
+PASS
+
+Running: /cad2/ece344f/tester/scripts/lab2-02-basic.py 
+basic test
+Mark for basic test is 40 out of 40
+PASS
+
+You have received 50 marks out of a total of 50 marks.

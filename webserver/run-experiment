@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# this script takes one required parameter, a port number.
+#
+# Using the run-one-experiment script, it runs experiments while varying three
+# parameters: 1) threads, 2) requests, 3) cachesize
+# 
+# it also takes an optional second parameter called "nocache". When this
+# parameter is provided, then the cachesize experiments are not run.
+#
+
+function usage()
+{
+    echo "Usage: ./run-experiment port [nocache]" 1>&2
+    exit 1
+}
+
+if [ $# -ne 1 -a $# -ne 2 ]; then
+    usage;
+elif [ $# -eq 2 ]; then
+    if [ $2 = "nocache" ]; then
+	NOCACHE=1
+    else
+	usage;
+    fi
+fi
+
+PORT=$1
+
+# start by creating a file set in tmp directory
+# mkdir -p /tmp/$(id -u -n)
+# FILESET=/tmp/$(id -u -n)/fileset
+# ./fileset -d $FILESET > /dev/null
+
+# start by creating a file set
+FILESET=fileset_dir
+./fileset -d $FILESET > /dev/null
+
+
+date
+
+rm -f plot-threads.out
+echo "Running threads experiment. Output goes to plot-threads.out"
+for threads in 0 1 2 4 8 16 32 64 128; do
+    echo -n "$threads, " >> plot-threads.out
+    ./run-one-experiment $PORT $threads 8 0 $FILESET.idx >> plot-threads.out
+done
+echo "Threads experiment done."
+date
+
+rm -f plot-requests.out
+echo "Running requests experiment. Output goes to plot-requests.out"
+for requests in 1 2 4 8 16 32; do
+    echo -n "$requests, " >> plot-requests.out
+    ./run-one-experiment $PORT 8 $requests 0 $FILESET.idx >> plot-requests.out
+done
+echo "Requests experiment done."
+date
+
+if [ -n "$NOCACHE" ]; then
+    exit 0
+fi
+
+rm -f plot-cachesize.out
+echo "Running cachesize experiment. Output goes to plot-cachesize.out"
+for cachesize in 16384 65536 262144 1048576 4194304 16777216; do
+    echo -n "$cachesize, " >> plot-cachesize.out
+    ./run-one-experiment $PORT 8 8 $cachesize $FILESET.idx >> plot-cachesize.out
+done
+echo "Cachesize experiment done."
+date
+
+exit 0

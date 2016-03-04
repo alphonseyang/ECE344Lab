@@ -1,0 +1,261 @@
+#include <assert.h>
+#include <stdlib.h>
+#include <ucontext.h>
+#include "thread.h"
+#include "interrupt.h"
+
+
+/* This is the thread control block */
+
+typedef int State;
+#define NEW_STATE 1
+#define RECOVER_STATE 2
+
+
+struct thread {
+    ucontext_t thread_context;
+    Tid tid;
+    State state;
+    struct thread *next;
+};
+
+struct thread *READY_HEAD = NULL;
+struct thread *RUNNING_THREAD = NULL;
+int thread_id_array[THREAD_MAX_THREADS];
+
+Tid assign_thread_id(){
+	int i = 0;
+	for(; i < THREAD_MAX_THREADS; i++){
+		if(!thread_id_array[i])   //return when encouter 0
+			return i;
+	}
+	if(!thread_id_array[THREAD_MAX_THREADS-1])
+		return THREAD_MAX_THREADS-1;
+	return THREAD_NOMORE;
+}
+
+void
+thread_init(void)
+{
+    struct thread *new_thread = (struct thread *)malloc(sizeof(struct thread));
+    getcontext(&(new_thread->thread_context));    //get the context of the initial thread
+    new_thread->tid = 0;
+    new_thread->state = RECOVER_STATE;
+	new_thread->next = NULL;
+    int i = 0;
+    for(; i < THREAD_MAX_THREADS; i++){
+        thread_id_array[i] = 0;
+    }
+    thread_id_array[0] = 1;
+    RUNNING_THREAD = new_thread;
+}
+
+Tid
+thread_id()
+{
+    if(RUNNING_THREAD != NULL)
+      return RUNNING_THREAD->tid;
+    return THREAD_INVALID;
+}
+
+
+Tid
+thread_create(void (*fn) (void *), void *parg)
+{
+	Tid new_id = assign_thread_id();
+	if(new_id < 0)
+		return THREAD_NOMORE;
+	struct thread *new_thread = (struct thread *)malloc(sizeof(struct thread));
+	getcontext(&(new_thread->thread_context));
+	new_thread->tid = new_id;
+	thread_id_array[new_id] = 1;
+	new_thread->state = RECOVER_STATE;
+	new_thread->next = NULL;
+	//allocate memory for sp, change the register value
+	return THREAD_FAILED;
+}
+
+Tid
+thread_yield(Tid want_tid)
+{
+    if(want_tid == THREAD_ANY){
+		if(READY_HEAD == NULL)
+			return THREAD_NONE;
+        //do like the THREAD_SELF case
+        //getcontext(&(RUNNING_THREAD->thread_context));
+        //set the state to NEW_STATE, so that it may not be set again
+        //save it to a ready queue
+        //find the thread that going to run
+        //thread_going_to_run = READY_HEAD;
+        //READ_HEAD move
+//        if(thread_going_to_run->state == NEW_STATE)
+                //RUNNING_THREAD->state = RECOVER_STATE;
+//            setcontext(&(RUNNING_THREAD->thread_context));
+                //change the running thread head and remove that from ready queue
+//        return RUNNING_THREAD->tid;
+    } else if(want_tid == THREAD_SELF || want_tid == RUNNING_THREAD->tid){
+        RUNNING_THREAD->state = NEW_STATE;
+        getcontext(&(RUNNING_THREAD->thread_context));
+        if(RUNNING_THREAD->state == NEW_STATE){
+            RUNNING_THREAD->state = RECOVER_STATE;
+            setcontext(&(RUNNING_THREAD->thread_context));
+        }
+        return RUNNING_THREAD->tid;
+    } else if(want_tid > THREAD_MAX_THREADS-1 || want_tid < THREAD_FAILED || !thread_id_array[want_tid])
+		return THREAD_INVALID;
+	return THREAD_FAILED;
+}
+
+Tid
+thread_exit(Tid tid)
+{
+	TBD();
+	return THREAD_FAILED;
+}
+
+//Linked List
+
+
+
+
+/*******************************************************************
+ * Important: The rest of the code should be implemented in Lab 3. *
+ *******************************************************************/
+
+/* This is the wait queue structure */
+struct wait_queue {
+	/* ... Fill this in ... */
+};
+
+struct wait_queue *
+wait_queue_create()
+{
+	struct wait_queue *wq;
+
+	wq = malloc(sizeof(struct wait_queue));
+	assert(wq);
+
+	TBD();
+
+	return wq;
+}
+
+void
+wait_queue_destroy(struct wait_queue *wq)
+{
+	TBD();
+	free(wq);
+}
+
+Tid
+thread_sleep(struct wait_queue *queue)
+{
+	TBD();
+	return THREAD_FAILED;
+}
+
+/* when the 'all' parameter is 1, wakeup all threads waiting in the queue.
+ * returns whether a thread was woken up on not. */
+int
+thread_wakeup(struct wait_queue *queue, int all)
+{
+	TBD();
+	return 0;
+}
+
+struct lock {
+	/* ... Fill this in ... */
+};
+
+struct lock *
+lock_create()
+{
+	struct lock *lock;
+
+	lock = malloc(sizeof(struct lock));
+	assert(lock);
+
+	TBD();
+
+	return lock;
+}
+
+void
+lock_destroy(struct lock *lock)
+{
+	assert(lock != NULL);
+
+	TBD();
+
+	free(lock);
+}
+
+void
+lock_acquire(struct lock *lock)
+{
+	assert(lock != NULL);
+
+	TBD();
+}
+
+void
+lock_release(struct lock *lock)
+{
+	assert(lock != NULL);
+
+	TBD();
+}
+
+struct cv {
+	/* ... Fill this in ... */
+};
+
+struct cv *
+cv_create()
+{
+	struct cv *cv;
+
+	cv = malloc(sizeof(struct cv));
+	assert(cv);
+
+	TBD();
+
+	return cv;
+}
+
+void
+cv_destroy(struct cv *cv)
+{
+	assert(cv != NULL);
+
+	TBD();
+
+	free(cv);
+}
+
+void
+cv_wait(struct cv *cv, struct lock *lock)
+{
+	assert(cv != NULL);
+	assert(lock != NULL);
+
+	TBD();
+}
+
+void
+cv_signal(struct cv *cv, struct lock *lock)
+{
+	assert(cv != NULL);
+	assert(lock != NULL);
+
+	TBD();
+}
+
+void
+cv_broadcast(struct cv *cv, struct lock *lock)
+{
+	assert(cv != NULL);
+	assert(lock != NULL);
+
+	TBD();
+}

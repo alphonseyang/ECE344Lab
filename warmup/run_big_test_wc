@@ -1,0 +1,40 @@
+#!/bin/bash
+
+SRC_PATH=/cad2/ece344f/src
+
+function cleanup {
+    rm -f wc.out wc-big.out
+}
+
+trap cleanup EXIT
+
+if [ ! -x ./test_wc ]; then
+   echo "./test_wc not found" 1>&2
+   exit 1
+fi
+
+START=$(date +%s.%N)
+./test_wc $SRC_PATH/wc-big.txt > wc.out
+END=$(date +%s.%N)
+DIFF=$(echo "$END - $START" | bc)
+
+cat wc.out | LC_ALL=C sort > wc-big.out
+cmp -s $SRC_PATH/wc-big.res wc-big.out
+
+if [ $? -ne 0 ]; then
+    echo "test_wc produced the wrong output." 1>&2
+    exit 1
+fi
+
+# program succeeds only if it took less than 30 seconds
+SUCCEED=$(echo "$DIFF < 30" | bc)
+if [ "$SUCCEED" -eq 0 ]; then
+    echo "Program took too long ($DIFF seconds)" 1>&2
+    exit 1
+fi
+
+echo "OK"
+exit 0
+
+
+

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+function cleanup {
+    rm -f wc.out
+}
+
+trap cleanup EXIT
+
+if [ ! -x ./test_wc ]; then
+   echo "./test_wc not found" 1>&2
+   exit 1
+fi
+
+./test_wc wc-small.txt > wc.out
+
+cat wc.out | LC_ALL=C sort > wc-small.out
+cmp -s wc-small.res wc-small.out
+
+if [ $? -ne 0 ]; then
+    echo "test_wc produced the wrong output." 1>&2
+    echo "see wc-small.out" 1>&2
+    exit 1
+fi
+
+echo "OK"
+exit 0
+
+
+

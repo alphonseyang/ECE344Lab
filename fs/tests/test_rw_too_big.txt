@@ -1,0 +1,10 @@
+file1: i_nr = 1, i_type = 1, i_size = 34376565248, block_count = 7
+file1: i_nr = 1, i_type = 1, i_size = 34376565248, block_count = 12
+write: File too large
+usage: write FILE OFFSET DATA
+file1: i_nr = 1, i_type = 1, i_size = 34376597504, block_count = 15
+nr of allocated inodes = 2
+nr of allocated blocks = 16
+file1: i_nr = 1, i_type = 1, i_size = 34376597504, block_count = 15
+nr of allocated inodes = 1
+nr of allocated blocks = 1
